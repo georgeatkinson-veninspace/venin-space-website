@@ -1,0 +1,58 @@
+# Caddy configuration for venin.space infrastructure
+# Manages routing for multiple services on EC2
+
+# Main domain - Marketing site
+venin.space {
+    # All traffic goes to marketing container (handles its own routing)
+    reverse_proxy localhost:3001
+
+    # Security headers
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        X-XSS-Protection "1; mode=block"
+    }
+
+    # Logging
+    log {
+        output file /var/log/caddy/venin-space.log
+        format json
+    }
+}
+
+# ExciseMate app subdomain
+excisemate.venin.space {
+    reverse_proxy localhost:3000
+
+    # Security headers
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        X-XSS-Protection "1; mode=block"
+    }
+
+    # Logging
+    log {
+        output file /var/log/caddy/excisemate.log
+        format json
+    }
+}
+
+# n8n automation subdomain
+n8n.venin.space {
+    reverse_proxy localhost:5678
+
+    # Security headers (relaxed for n8n iframe functionality)
+    header {
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Logging
+    log {
+        output file /var/log/caddy/n8n.log
+        format json
+    }
+}
