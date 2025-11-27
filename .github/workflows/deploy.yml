@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  EC2_HOST: ubuntu@15.134.147.34
+  EC2_HOST: ubuntu@103.108.228.125
 
 jobs:
   deploy:
