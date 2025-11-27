@@ -67,17 +67,13 @@ jobs:
           # Add venin.space to Caddyfile if not exists
           if ! grep -q "venin.space" /etc/caddy/Caddyfile; then
             echo "Adding venin.space to Caddyfile..."
-            cat >> /etc/caddy/Caddyfile << 'CADDY_CONF'
-
-# ========================================
-# Venin Space Website
-# ========================================
-venin.space {
-    reverse_proxy localhost:3002
-}
-CADDY_CONF
+            echo "" >> /etc/caddy/Caddyfile
+            echo "# Venin Space Website" >> /etc/caddy/Caddyfile
+            echo "venin.space {" >> /etc/caddy/Caddyfile
+            echo "    reverse_proxy localhost:3002" >> /etc/caddy/Caddyfile
+            echo "}" >> /etc/caddy/Caddyfile
             systemctl reload caddy
-            echo "✅ Caddy configured for venin.space"
+            echo "Caddy configured for venin.space"
           fi
 
           cd /var/www/venin.space
