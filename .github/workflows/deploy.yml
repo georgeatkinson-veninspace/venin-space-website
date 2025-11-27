@@ -70,7 +70,7 @@ jobs:
             echo "" >> /etc/caddy/Caddyfile
             echo "# Venin Space Website" >> /etc/caddy/Caddyfile
             echo "venin.space {" >> /etc/caddy/Caddyfile
-            echo "    reverse_proxy localhost:3002" >> /etc/caddy/Caddyfile
+            echo "    reverse_proxy localhost:3003" >> /etc/caddy/Caddyfile
             echo "}" >> /etc/caddy/Caddyfile
             systemctl reload caddy
             echo "Caddy configured for venin.space"
@@ -84,16 +84,16 @@ jobs:
           # Start with PM2 or simple nohup
           if command -v pm2 &> /dev/null; then
             pm2 delete venin-space 2>/dev/null || true
-            PORT=3002 pm2 start server.js --name venin-space
+            PORT=3003 pm2 start server.js --name venin-space
             pm2 save
           else
-            PORT=3002 nohup node server.js > /var/log/venin-space.log 2>&1 &
+            PORT=3003 nohup node server.js > /var/log/venin-space.log 2>&1 &
           fi
 
           sleep 3
 
           # Health check
-          if curl -sf http://localhost:3002 > /dev/null; then
+          if curl -sf http://localhost:3003 > /dev/null; then
             echo "✅ venin.space deployed successfully!"
           else
             echo "❌ Health check failed"
