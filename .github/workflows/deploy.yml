@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  EC2_HOST: ubuntu@103.108.228.125
+  VPS_HOST: ubuntu@103.108.228.125
 
 jobs:
   deploy:
@@ -38,30 +38,30 @@ jobs:
 
       - name: Deploy to FlowVPS
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/ssh_key.pem
           chmod 400 /tmp/ssh_key.pem
 
           # Create deployment directory
-          ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no $EC2_HOST 'sudo mkdir -p /var/www/venin.space && sudo chown ubuntu:ubuntu /var/www/venin.space'
+          ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no $VPS_HOST 'sudo mkdir -p /var/www/venin.space && sudo chown ubuntu:ubuntu /var/www/venin.space'
 
           # Copy standalone build
           rsync -avz --delete -e "ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no" \
-            .next/standalone/ $EC2_HOST:/var/www/venin.space/
+            .next/standalone/ $VPS_HOST:/var/www/venin.space/
 
           # Copy static assets
           rsync -avz -e "ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no" \
-            .next/static/ $EC2_HOST:/var/www/venin.space/.next/static/
+            .next/static/ $VPS_HOST:/var/www/venin.space/.next/static/
 
           # Copy public folder if exists
           if [ -d "public" ]; then
             rsync -avz -e "ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no" \
-              public/ $EC2_HOST:/var/www/venin.space/public/
+              public/ $VPS_HOST:/var/www/venin.space/public/
           fi
 
           # Setup nginx and restart service
-          ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no $EC2_HOST << 'DEPLOY_EOF'
+          ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no $VPS_HOST << 'DEPLOY_EOF'
           set -e
 
           # Setup nginx config if not exists
