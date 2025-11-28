@@ -46,9 +46,20 @@ jobs:
           # Create deployment directory
           ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no $VPS_HOST 'mkdir -p /var/www/venin.space'
 
+          # Find the actual standalone build directory (Next.js nests the working directory path)
+          # It could be directly in standalone/ or nested like standalone/home/runner/work/...
+          STANDALONE_DIR=".next/standalone"
+          if [ -f "$STANDALONE_DIR/server.js" ]; then
+            BUILD_DIR="$STANDALONE_DIR"
+          else
+            # Find nested server.js
+            BUILD_DIR=$(dirname $(find "$STANDALONE_DIR" -name "server.js" -type f | head -1))
+          fi
+          echo "Using standalone build from: $BUILD_DIR"
+
           # Copy standalone build
           rsync -avz --delete -e "ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no" \
-            .next/standalone/ $VPS_HOST:/var/www/venin.space/
+            "$BUILD_DIR/" $VPS_HOST:/var/www/venin.space/
 
           # Copy static assets
           rsync -avz -e "ssh -i /tmp/ssh_key.pem -o StrictHostKeyChecking=no" \
@@ -78,9 +89,9 @@ jobs:
 
           cd /var/www/venin.space
 
-          # Force stop any existing process
+          # Kill any existing process on port 3003 (including orphaned next-server processes)
+          fuser -k 3003/tcp 2>/dev/null || true
           pm2 delete venin-space 2>/dev/null || true
-          pkill -f "server.js" 2>/dev/null || true
           sleep 2
 
           # Start with PM2
@@ -94,6 +105,7 @@ jobs:
             echo "✅ venin.space deployed successfully!"
           else
             echo "❌ Health check failed"
+            pm2 logs venin-space --lines 20
             exit 1
           fi
           DEPLOY_EOF
