@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Venin Client Systems',
-  description: 'Building software for Australian businesses',
+  description: 'Software infrastructure for the real world',
 }
 
 export default function RootLayout({

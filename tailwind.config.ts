@@ -8,19 +8,31 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        cyber: {
+          black: '#0a0a0f',
+          dark: '#12121a',
+          gray: '#1a1a2e',
+          cyan: '#00f5ff',
+          magenta: '#ff00ff',
+          purple: '#8b5cf6',
+          pink: '#ec4899',
+          blue: '#3b82f6',
+        },
+      },
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-out',
-        'fade-in-up': 'fadeInUp 0.6s ease-out',
-        'fade-in-down': 'fadeInDown 0.6s ease-out',
-        'scale-in': 'scaleIn 0.5s ease-out',
-        'slide-in-left': 'slideInLeft 0.6s ease-out',
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        'fade-in-down': 'fadeInDown 0.6s ease-out forwards',
+        'scale-in': 'scaleIn 0.5s ease-out forwards',
+        'slide-in-left': 'slideInLeft 0.6s ease-out forwards',
         'float': 'float 6s ease-in-out infinite',
-        'float-delayed': 'float 6s ease-in-out infinite 3s',
-        'float-particle': 'floatParticle 8s ease-in-out infinite',
-        'float-particle-slow': 'floatParticle 12s ease-in-out infinite',
-        'float-particle-delayed': 'floatParticle 10s ease-in-out infinite 2s',
-        'wave': 'wave 8s linear infinite',
-        'wave-delayed': 'wave 8s linear infinite 4s',
+        'float-slow': 'float 10s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'scan-line': 'scanLine 8s linear infinite',
+        'glitch': 'glitch 0.3s ease-in-out',
+        'typing': 'typing 3.5s steps(40, end)',
+        'blink-caret': 'blinkCaret 0.75s step-end infinite',
       },
       keyframes: {
         fadeIn: {
@@ -49,16 +61,39 @@ const config: Config = {
           '50%': { transform: 'translateY(-10px) translateX(-10px)' },
           '75%': { transform: 'translateY(-15px) translateX(5px)' },
         },
-        floatParticle: {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)', opacity: '0.3' },
-          '25%': { transform: 'translate(30px, -30px) scale(1.1)', opacity: '0.5' },
-          '50%': { transform: 'translate(-20px, -60px) scale(0.9)', opacity: '0.3' },
-          '75%': { transform: 'translate(20px, -40px) scale(1.05)', opacity: '0.4' },
+        pulseGlow: {
+          '0%, 100%': {
+            opacity: '1',
+            filter: 'brightness(1)',
+          },
+          '50%': {
+            opacity: '0.8',
+            filter: 'brightness(1.2)',
+          },
         },
-        wave: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
+        scanLine: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100vh)' },
         },
+        glitch: {
+          '0%': { transform: 'translate(0)' },
+          '20%': { transform: 'translate(-2px, 2px)' },
+          '40%': { transform: 'translate(-2px, -2px)' },
+          '60%': { transform: 'translate(2px, 2px)' },
+          '80%': { transform: 'translate(2px, -2px)' },
+          '100%': { transform: 'translate(0)' },
+        },
+        typing: {
+          'from': { width: '0' },
+          'to': { width: '100%' },
+        },
+        blinkCaret: {
+          'from, to': { borderColor: 'transparent' },
+          '50%': { borderColor: '#00f5ff' },
+        },
+      },
+      fontFamily: {
+        mono: ['SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', 'monospace'],
       },
     },
   },
